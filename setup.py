@@ -9,7 +9,7 @@ setuptools.setup(
     name='cavy',
     version=cavy.version,
     description='Library of unit testing helpers.',
-    long_description=open('README').read(),
+    long_description=open('README.rst').read(),
     author='Dave Shawley',
     author_email='daveshawley@gmail.com',
     url='https://github.com/dave-shawley/cavy',

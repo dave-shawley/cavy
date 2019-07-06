@@ -2,9 +2,9 @@
 cavy -- testing helper library
 ==============================
 
-.. include:: ../README
+.. include:: ../README.rst
 
 Release History
 ===============
 
-.. include:: ../CHANGELOG
+.. include:: ../CHANGELOG.rst
