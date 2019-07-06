@@ -13,6 +13,7 @@ workflows:
       - trigger-docs-build:
           requires:
             - build-docs
+      - run-tests
   release-workflow:
     jobs:
       - upload-package:
