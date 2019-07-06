@@ -10,6 +10,10 @@ Reference
 .. autoclass:: cavy.testing.EnvironmentMixin
    :members:
 
+.. autoclass:: cavy.testing.PEP8NamingMixin
+   :members:
+   :undoc-members:
+
 Release History
 ===============
 
