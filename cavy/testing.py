@@ -184,3 +184,67 @@ class PEP8NamingMixin(unittest.TestCase):
 
     def assert_not_regex(self, text, unexpected_regex, msg=None):
         self.assertNotRegex(text, unexpected_regex, msg)
+
+
+class AdditionalAssertionsMixin(unittest.TestCase):
+    """Useful assertions that aren't in the Standard Library.
+
+    This mix-in includes some assertions that I've found myself
+    wishing were part of the Standard Library from time to time.
+
+    """
+
+    def assert_between(self, value, low, high, msg=None):
+        """Assert that `value` is between `low` and `high`.
+
+        :param value: value to compare
+        :param low: inclusive low range endpoint
+        :param high: inclusive high range endpoint
+        :param str msg: optional message to use on failure
+
+        """
+        if msg is None:
+            self.longMessage = False
+            msg = '{!r} is not between {!r} and {!r}'.format(value, low, high)
+        self.assertGreaterEqual(value, low, msg=msg)
+        self.assertLessEqual(value, high, msg=msg)
+
+    def assert_startswith(self, value, prefix, msg=None):
+        """Assert that `prefix` is a prefix of `value`.
+
+        :param value: value to check
+        :param prefix: sequence of values that `value` should start with.
+        :param str msg: optional message to use on failure
+
+        Note that `value` and `prefix` ARE NOT required to be of the
+        same type.  The only requirement is that they are ordered
+        sequences of the same underlying type.
+
+        """
+        if msg is None:
+            msg = '{!r} does not start with {!r}'.format(value, prefix)
+        if len(prefix) > len(value):
+            self.fail(msg)
+        for a, b in zip(value, prefix):
+            if a != b:
+                self.fail(msg)
+
+    def assert_endswith(self, value, suffix, msg=None):
+        """Assert that `suffix` is a suffix of `value`.
+
+        :param value: value to check
+        :param suffix: sequence of values that `value` should end with
+        :param str msg: optional message to use on failure
+
+        Note that `value` and `suffix` ARE NOT required to be of the
+        same type.  They are required to be reversible sequences of the
+        same underlying type.
+
+        """
+        if msg is None:
+            msg = '{!r} does not end with {!r}'.format(value, suffix)
+        if len(suffix) > len(value):
+            raise AssertionError(msg)
+        for a, b in zip(reversed(value), reversed(suffix)):
+            if a != b:
+                raise AssertionError(msg)

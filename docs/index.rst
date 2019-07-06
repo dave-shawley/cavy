@@ -7,6 +7,9 @@ cavy -- testing helper library
 Reference
 =========
 
+.. autoclass:: cavy.testing.AdditionalAssertionsMixin
+   :members:
+
 .. autoclass:: cavy.testing.EnvironmentMixin
    :members:
 
