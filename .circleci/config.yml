@@ -66,8 +66,8 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Trigger Read the Docs build
           command: |
-            name: Trigger Read the Docs build
             curl --request POST \
                  --data "token=$READTHEDOCS_TOKEN" \
                  --data 'branches=master' \
