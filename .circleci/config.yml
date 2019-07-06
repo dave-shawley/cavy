@@ -13,6 +13,7 @@ workflows:
       - trigger-docs-build:
           requires:
             - build-docs
+      - run-tests
   release-workflow:
     jobs:
       - upload-package:
@@ -75,3 +76,36 @@ jobs:
                  --data 'branches=master' \
                  --header 'Email-Address: daveshawley+rtd@gmail.com' \
                  https://readthedocs.org/api/v2/webhook/cavy/91155/
+
+  run-tests:
+    executor: python-3
+    steps:
+      - checkout
+      - run:
+          name: Install tools
+          command: |
+            pip install -q --user '.[dev]'
+      - run:
+          name: Run tests
+          command: |
+            export PATH=$PATH:$HOME/.local/bin
+            mkdir -p build/circleci/nosetests
+            nosetests --with-coverage \
+                      --with-xunit --xunit-file=build/nosetests.xml
+            coverage report
+            coverage xml -o build/coverage.xml
+            # required for store_test_results 
+            cp build/nosetests.xml build/circleci/nosetests/results.xml
+      - store_test_results:
+          path: build/circleci
+      - run:
+          name: Upload coverage to coveralls
+          command: |
+            export PATH=$PATH:$HOME/.local/bin
+            if test -n "$COVERALLS_REPO_TOKEN"
+            then
+              pip install -q --user coveralls
+              coveralls
+            else
+              echo 'COVERALLS_REPO_TOKEN is not defined, skipping upload.'
+            fi
