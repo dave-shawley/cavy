@@ -48,7 +48,7 @@ jobs:
             pip install -q --user twine
 
             echo 'Verifying package metadata...'
-            ../setup.py check --metadata --restructuredtext --strict
+            ./setup.py check --metadata --restructuredtext --strict
 
             echo 'Building and verifying package distribution...'
             rm -fr dist
