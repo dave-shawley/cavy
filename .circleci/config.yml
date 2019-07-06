@@ -10,6 +10,7 @@ workflows:
   build-workflow:
     jobs:
       - build-docs
+      - trigger-docs-build
   release-workflow:
     jobs:
       - upload-package:
@@ -26,6 +27,7 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Build documentation
           command: |
             export PATH=$PATH:$HOME/.local/bin
 
@@ -41,6 +43,7 @@ jobs:
     steps:
       - checkout
       - run:
+          name: Upload python source distribution
           command: |
             export PATH=$PATH:$HOME/.local/bin
 
@@ -57,3 +60,16 @@ jobs:
 
             echo 'Uploading distribution...'
             twine upload dist/*
+
+  trigger-docs-build:
+    executor: python-3
+    steps:
+      - checkout
+      - run:
+          command: |
+            name: Trigger Read the Docs build
+            curl --request POST \
+                 --data "token=$READTHEDOCS_TOKEN" \
+                 --data 'branches=master' \
+                 --header 'Email-Address: daveshawley+rtd@gmail.com' \
+                 https://readthedocs.org/api/v2/webhook/cavy/91155/
