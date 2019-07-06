@@ -1,0 +1,59 @@
+version: "2.1"
+
+executors:
+  python-3:
+    docker:
+      - image: circleci/python:3.7
+
+workflows:
+  version: "2"
+  build-workflow:
+    jobs:
+      - build-docs
+  release-workflow:
+    jobs:
+      - upload-package:
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /.*/
+          context: org-global
+
+jobs:
+  build-docs:
+    executor: python-3
+    steps:
+      - checkout
+      - run:
+          command: |
+            export PATH=$PATH:$HOME/.local/bin
+
+            echo 'Installing requirements...'
+            pip install --user -e .
+            pip install --user '.[dev]'
+
+            echo 'Building documentation...'
+            ./setup.py build_sphinx
+
+  upload-package:
+    executor: python-3
+    steps:
+      - checkout
+      - run:
+          command: |
+            export PATH=$PATH:$HOME/.local/bin
+
+            echo 'Installing twine...'
+            pip install -q --user twine
+
+            echo 'Verifying package metadata...'
+            ../setup.py check --metadata --restructuredtext --strict
+
+            echo 'Building and verifying package distribution...'
+            rm -fr dist
+            ./setup.py -q sdist
+            twine check dist/*
+
+            echo 'Uploading distribution...'
+            twine upload dist/*
