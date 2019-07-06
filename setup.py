@@ -16,8 +16,11 @@ setuptools.setup(
     packages=['cavy'],
     extras_require={
         'dev': [
+            'coverage==4.5.3',
             'flake8==3.7.7',
+            'nose==1.3.7',
             'sphinx==2.1.2',
+            'tox==3.13.2',
             'yapf==0.27.0',
         ],
     },
