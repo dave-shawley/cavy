@@ -10,7 +10,9 @@ workflows:
   build-workflow:
     jobs:
       - build-docs
-      - trigger-docs-build
+      - trigger-docs-build:
+          requires:
+            - build-docs
   release-workflow:
     jobs:
       - upload-package:
