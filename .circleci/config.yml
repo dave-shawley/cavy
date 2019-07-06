@@ -89,10 +89,15 @@ jobs:
           name: Run tests
           command: |
             export PATH=$PATH:$HOME/.local/bin
-            test -d build || mkdir build
-            nosetests --with-coverage --with-xunit --xunit-file=build/nosetests.xml
+            mkdir -p build/circleci/nosetests
+            nosetests --with-coverage \
+                      --with-xunit --xunit-file=build/nosetests.xml
             coverage report
             coverage xml -o build/coverage.xml
+            # required for store_test_results 
+            cp build/nosetests.xml build/circleci/nosetests/results.xml
+      - store_test_results:
+          path: build/circleci
       - run:
           name: Upload coverage to coveralls
           command: |
