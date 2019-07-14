@@ -1,6 +1,6 @@
 import logging
 import os
-import unittest
+import unittest.mock
 
 
 class EnvironmentMixin(unittest.TestCase):
@@ -248,3 +248,32 @@ class AdditionalAssertionsMixin(unittest.TestCase):
         for a, b in zip(reversed(value), reversed(suffix)):
             if a != b:
                 raise AssertionError(msg)
+
+
+class PatchingMixin(unittest.TestCase):
+    """Make patching easy without context managers.
+
+    The ``with unittest.mock.patch(...)`` syntax is nice for simple
+    patching but sometimes it gets very onerous.  This mix-in adds a
+    single method that calls :func:`unittest.mock.patch` and cleans
+    up the patch in :meth:`.tearDown`.  This makes it possible to
+    patch the same target for all tests in a test case by calling
+    :meth:`.patch` in :meth:`.setUp` or patch many targets without
+    nesting a pile of context managers.
+
+    """
+
+    def setUp(self):
+        super().setUp()
+        self.__patches = []
+
+    def tearDown(self):
+        super().tearDown()
+        for patcher in self.__patches:
+            patcher.stop()
+        del self.__patches[:]
+
+    def patch(self, target, **kwargs) -> unittest.mock.Mock:
+        """Patch `target` and return the patched mock."""
+        self.__patches.append(unittest.mock.patch(target, **kwargs))
+        return self.__patches[-1].start()

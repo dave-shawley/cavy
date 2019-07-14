@@ -13,6 +13,9 @@ Reference
 .. autoclass:: cavy.testing.EnvironmentMixin
    :members:
 
+.. autoclass:: cavy.testing.PatchingMixin
+   :members:
+
 .. autoclass:: cavy.testing.PEP8NamingMixin
    :members:
    :undoc-members:

@@ -1,3 +1,7 @@
+0.2.0 (14 Jul 2019)
+===================
+- Added :class:`cavy.testing.PatchingMixin`
+
 0.1.0 (6 Jul 2019)
 ==================
 - First real release with the following classes:
